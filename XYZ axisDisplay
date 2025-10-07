@@ -1,0 +1,30 @@
+-- 显示本地玩家XYZ坐标
+local player = game.Players.LocalPlayer
+local gui = Instance.new("ScreenGui")
+gui.Name = "XYZ_Display"
+gui.Parent = player:WaitForChild("PlayerGui")
+gui.ResetOnSpawn = false
+
+local label = Instance.new("TextLabel")
+label.Parent = gui
+label.BackgroundTransparency = 0.5
+label.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+label.Position = UDim2.new(0, 10, 0, 10)
+label.Size = UDim2.new(0, 250, 0, 40)
+label.Font = Enum.Font.SourceSansBold
+label.TextColor3 = Color3.new(1,1,1)
+label.TextSize = 18
+label.TextStrokeTransparency = 0.7
+label.Text = "XYZ: Loading..."
+
+-- 实时更新坐标
+game:GetService("RunService").RenderStepped:Connect(function()
+    local char = player.Character or player.CharacterAdded:Wait()
+    local hrp = char:FindFirstChild("HumanoidRootPart")
+    if hrp then
+        local pos = hrp.Position
+        label.Text = string.format("X: %.2f\nY: %.2f\nZ: %.2f", pos.X, pos.Y, pos.Z)
+    else
+        label.Text = "XYZ: 未找到角色"
+    end
+end)
